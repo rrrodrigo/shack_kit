@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["bajer@tigana.pl"]
 
   spec.summary       = "Set of HAM radio tools packaged by SQ9OZM"
+  spec.description   = "currently limited to SP and SOTA-related stuff"
   spec.homepage      = "https://github.com/rrrodrigo/shack_kit"
   spec.license       = "MIT"
 

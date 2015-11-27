@@ -23,13 +23,13 @@ module ShackKit
         Sequel::Migrator.run(DB, MIGRATIONS_DIR)
       end
 
-      def db_update
+      def db_load
         SOTACalls.update
         SPCalls.update
       end
     end
-
-    require 'shack_kit/data/sota_calls'
-    require 'shack_kit/data/sp_calls'
   end
 end
+
+require 'shack_kit/data/sota_calls'
+require 'shack_kit/data/sp_calls'

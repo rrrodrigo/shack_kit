@@ -49,7 +49,7 @@ ShackKit::Data::SOTACalls.include?('SQ9OZM') #=> true
 ShackKit::Data::SOTACalls.include?('EA0JC') #=> false
 # apparently, the King of Spain does not do SOTA yet
 
-# Check whether a SP callsign is valid - the method returns callsign licence info or nil, if the call is not valid:
+# Check whether a SP callsign is valid - the method returns callsign licence info or nil (for invalid calls)
 ShackKit::Data::SPCalls.check('SQ9OZM')
 #=> {:callsign=>"SQ9OZM", :station_type=>"individual", :uke_branch=>"UKE Kraków",
 #    :licence_number=>"3285/I/2010", :valid_until=>#<Date: 2020-12-28>, :licence_category=>"1",
@@ -71,7 +71,6 @@ ShackKit::Data::SPCalls.check('SP0AAA') #=> nil
 Christophe ON6ZQ compiles the reference data every night and publishes them at http://www.on6zq.be/w/index.php/SOTA/MasterDta in a [zip file](http://www.on6zq.be/p/SOTA/SOTAdata/masterSOTA.zip). Upon extracting the zip, check for file named `masterSOTA.scp` and load its content into ShackKit database like this:
 
 ```ruby
-require 'shack_kit'
 ShackKit::Data::SOTACalls.update('masterSOTA.scp') #=> 6328 (this is the count of loaded callsigns)
 ```
 
@@ -79,7 +78,6 @@ ShackKit::Data::SOTACalls.update('masterSOTA.scp') #=> 6328 (this is the count o
 [UKE, the Office of Electronic Communication](https://en.uke.gov.pl) has the authority over issuing amateur radio licenses in Poland. The current list of valid licenses is downloadable as an XLS file from this page https://www.uke.gov.pl/pozwolenia-radiowe-w-sluzbie-radiokomunikacyjnej-amatorskiej-8753. The list is updated monthly, the timestamp of last update is listed towards the bottom of the page as *ostatnia zmiana*. The file can be loaded into ShackKit database like this:
 
 ```ruby
-require 'shack_kit'
 ShackKit::Data::SPCalls.update("db/sources/201511\ -\ RA2WWW_ok.xls") #=> 12993 (number of loaded calls)
 ```
 

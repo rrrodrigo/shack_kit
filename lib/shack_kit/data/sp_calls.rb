@@ -5,7 +5,7 @@ module ShackKit
     class SPCalls
       SOURCE_SHEETS = %w(Indywidualne Kluby)
 
-      def self.update(source_file=SOURCES_DIR+"/201511\ -\ RA2WWW_ok.xls")
+      def self.update(source_file = SOURCES_DIR+"/201511\ -\ RA2WWW_ok.xls")
         calls = DB[:sp_calls]
         calls.delete
         xls = SimpleSpreadsheet::Workbook.read(source_file)

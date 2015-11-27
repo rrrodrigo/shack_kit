@@ -1,7 +1,7 @@
 module ShackKit
   module Data
     class SOTACalls
-      def self.update(source_file=SOURCES_DIR+"/masterSOTA.scp")
+      def self.update(source_file = SOURCES_DIR+"/masterSOTA.scp")
         calls = DB[:sota_calls]
         calls.delete
         File.foreach(source_file) do |line|

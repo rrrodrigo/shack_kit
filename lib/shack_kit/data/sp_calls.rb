@@ -1,4 +1,4 @@
-require "simple-spreadsheet"
+require 'simple-spreadsheet'
 
 module ShackKit
   module Data

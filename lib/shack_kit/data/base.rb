@@ -1,6 +1,6 @@
-require "fileutils"
-require "sqlite3"
-require "sequel"
+require 'fileutils'
+require 'sqlite3'
+require 'sequel'
 
 module ShackKit
   module Data
@@ -29,7 +29,7 @@ module ShackKit
       end
     end
 
-    require "shack_kit/data/sota_calls"
-    require "shack_kit/data/sp_calls"
+    require 'shack_kit/data/sota_calls'
+    require 'shack_kit/data/sp_calls'
   end
 end

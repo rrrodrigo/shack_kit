@@ -20,11 +20,17 @@ module ShackKit
         FileUtils.mkpath(DATA_DIR)
         SQLite3::Database.new(DB_FILE) unless File.file?(DB_FILE)
         schema_update
+        db_update
       end
 
       def schema_update
         Sequel.extension :migration
         Sequel::Migrator.run(DB, MIGRATIONS_DIR)
+      end
+
+      def db_update
+        SotaCalls.update
+        SPCalls.update
       end
     end
 

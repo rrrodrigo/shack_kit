@@ -35,6 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'irbtools', '~> 2'
   spec.add_runtime_dependency 'sqlite3', '~> 1.3', '>= 1.3.3'
   spec.add_runtime_dependency 'sequel', '~> 4', '>= 4.28'
-  spec.add_runtime_dependency 'simple-spreadsheet', '~> 0.4', '>= 0.4.1'
   spec.add_runtime_dependency 'maidenhead', '~> 1.0', '>= 1.0.1'
 end

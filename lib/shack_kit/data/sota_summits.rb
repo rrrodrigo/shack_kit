@@ -4,26 +4,25 @@ module ShackKit
       def self.update(source_file = SOURCES_DIR + "/summitslist.csv")
         summits = DB[:sota_summits]
         summits.delete
-        csv = SimpleSpreadsheet::Workbook.read(source_file, ".csv")
-        3.upto(csv.last_row) do |line|
+        CSV.foreach(source_file, headers: true, skip_lines: /SOTA Summits List/) do |row|
           summits.insert(
-            summit_code: csv.cell(line, 1),
-            association_name: csv.cell(line, 2),
-            region_name: csv.cell(line, 3),
-            summit_name: csv.cell(line, 4),
-            alt_m: csv.cell(line, 5).to_i,
-            alt_ft: csv.cell(line, 6).to_i,
-            grid_ref1: csv.cell(line, 7),
-            grid_ref2: csv.cell(line, 8),
-            longitude: csv.cell(line, 9).to_f,
-            latitude: csv.cell(line, 10).to_f,
-            points: csv.cell(line, 11).to_i,
-            bonus_points: csv.cell(line, 12).to_i,
-            valid_from: Date.parse(csv.cell(line, 13)),
-            valid_to: Date.parse(csv.cell(line, 14)),
-            activation_count: csv.cell(line, 15).to_i,
-            activation_date: csv.cell(line, 16).nil? ? nil : Date.parse(csv.cell(line, 16)),
-            activation_call: csv.cell(line, 17)
+            summit_code: row["SummitCode"],
+            association_name: row["AssociationName"],
+            region_name: row["RegionName"],
+            summit_name: row["SummitName"],
+            alt_m: row["AltM"].to_i,
+            alt_ft: row["AltFt"].to_i,
+            grid_ref1: row["GridRef1"],
+            grid_ref2: row["GridRef2"],
+            longitude: row["Longitude"].to_f,
+            latitude: row["Latitude"].to_f,
+            points: row["Points"].to_i,
+            bonus_points: row["BonusPoints"].to_i,
+            valid_from: Date.parse(row["ValidFrom"]),
+            valid_to: Date.parse(row["ValidTo"]),
+            activation_count: row["ActivationCount"].to_i,
+            activation_date: row["ActivationDate"].nil? ? nil : Date.parse(row["ActivationDate"]),
+            activation_call: row["ActivationCall"]
           )
         end
         summits.count

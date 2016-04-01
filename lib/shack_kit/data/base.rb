@@ -1,7 +1,6 @@
 require 'fileutils'
 require 'sqlite3'
 require 'sequel'
-require 'simple-spreadsheet'
 require 'maidenhead'
 
 module ShackKit

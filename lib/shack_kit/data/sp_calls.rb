@@ -1,26 +1,21 @@
 module ShackKit
   module Data
     class SPCalls
-      SOURCE_SHEETS = %w(Indywidualne Kluby)
-
-      def self.update(source_file = SOURCES_DIR + "/201511\ -\ RA2WWW_ok.xls")
+      def self.update(*source_files)
         calls = DB[:sp_calls]
         calls.delete
-        xls = SimpleSpreadsheet::Workbook.read(source_file)
-        SOURCE_SHEETS.each do |sheet_name|
-          sheet_index = xls.sheets.index(sheet_name)
-          xls.selected_sheet = xls.sheets[sheet_index]
-          xls.first_row.upto(xls.last_row) do |row|
-            next if xls.cell(row,1) == "nazwa_uke"
+        source_files.each do |source_file|
+          CSV.foreach(source_file, col_sep: ";", encoding: "Windows-1250:UTF-8", headers: true) do |row|
+            individual = row["operator_1"].nil?
             calls.insert(
-              callsign: xls.cell(row, 4),
-              station_type: sheet_name == "Kluby" ? 'club' : 'individual',
-              uke_branch: xls.cell(row, 1),
-              licence_number: xls.cell(row, 2),
-              valid_until: xls.cell(row, 3),
-              licence_category: xls.cell(row, 5),
-              tx_power: xls.cell(row, 6).to_i,
-              station_location: xls.cell(row, sheet_name == "Kluby" ? 20 : 7)
+              callsign: row["call_sign"],
+              station_type: individual ? "individual" : "club",
+              uke_branch: row["department"],
+              licence_number: row["number"],
+              valid_until: Date.parse(row["valid_to"]),
+              licence_category: row["category"],
+              tx_power: row["transmitter_power"].to_i,
+              station_location: individual ? row["station_location"] : row["station_city"]
             )
           end
         end

@@ -5,8 +5,8 @@ Collection of HAM radio utilities packaged as Ruby gem, by SQ9OZM
 ## Functionality
 ### Data lookup
  * SOTA callsigns checker, using ON6ZQ database of SOTA activators and chasers (http://www.on6zq.be/w/index.php/SOTA/MasterDta)
- * SP operators callsigns checker, using data published by Republic of Poland Office of Electronic Communication (https://www.uke.gov.pl/pozwolenia-radiowe-w-sluzbie-radiokomunikacyjnej-amatorskiej-8753)
- * more to come
+ * SOTA summits checker, using the database of SOTA summits published at http://sotadata.org.uk/summits.aspx by Summits on the Air
+ * SP operators callsigns checker, using data published by Republic of Poland Office of Electronic Communication (https://amator.uke.gov.pl/?locale=en)
 
 ## Installation
 
@@ -63,6 +63,16 @@ ShackKit::Data::SPCalls.check('SP9KDR')
 #
 # and an invalid call:
 ShackKit::Data::SPCalls.check('SP0AAA') #=> nil
+
+# Check the details of a SOTA summit by giving its reference:
+ShackKit::Data::SOTASummits.check('SP/BZ-059')
+#=> {:id=>148420, :summit_code=>"SP/BZ-057", :association_name=>"Poland", :region_name=>"Beskidy Zachodnie",
+#    :summit_name=>"Koskowa Góra", :alt_m=>866, :alt_ft=>2841, :grid_ref1=>"19.7833", :grid_ref2=>"49.7528",
+#    :longitude=>19.7833, :latitude=>49.7528, :points=>6, :bonus_points=>0,
+#    :valid_from=>#<Date: 2008-04-01 ((2454558j,0s,0n),+0s,2299161j)>, :valid_to=>#<Date: 2099-12-31 ((2488069j,0s,0n),+0s,2299161j)>,
+#    :activation_count=>29, :activation_date=>#<Date: 2016-03-31 ((2457479j,0s,0n),+0s,2299161j)>,
+#    :activation_call=>"SQ9OZM/P"}
+
 ```
 
 #### How to refresh the data in ShackKit database?
@@ -74,11 +84,20 @@ Christophe ON6ZQ compiles the reference data every night and publishes them at h
 ShackKit::Data::SOTACalls.update('masterSOTA.scp') #=> 6328 (this is the count of loaded callsigns)
 ```
 
+##### SOTA summits
+Summits on the Air Management Team maintains the database of SOTA award program at http://www.sotadata.org.uk. The database includes a list of summits,
+updated daily, available for download in CSV format by following a link from the bottom of the [summits page](http://www.sotadata.org.uk/summits.aspx).
+The file can be loaded into ShackKit database like this:
+```ruby
+ShackKit::Data::SOTASummits.update("db/sources/summitslist.csv") #=> 95618 (this is the count of loaded summits)
+```
+It is a large dataset and will take a while to load.
+
 ##### SP callsigns
-[UKE, the Office of Electronic Communication](https://en.uke.gov.pl) has the authority over issuing amateur radio licenses in Poland. The current list of valid licenses is downloadable as an XLS file from this page https://www.uke.gov.pl/pozwolenia-radiowe-w-sluzbie-radiokomunikacyjnej-amatorskiej-8753. The list is updated monthly, the timestamp of last update is listed towards the bottom of the page as *ostatnia zmiana*. The file can be loaded into ShackKit database like this:
+[UKE, the Office of Electronic Communication](https://en.uke.gov.pl) has the authority over issuing amateur radio licenses in Poland. The current lists of valid licenses are published separately for individual and club stations and are downloadable as CSV files from these pages: https://amator.uke.gov.pl/individuals?locale=en (Individuals) and https://amator.uke.gov.pl/clubs?locale=en (Clubs). There is a blue "Download" button on the bottom left of each page. Both datasets can be then loaded into ShackKit database like this:
 
 ```ruby
-ShackKit::Data::SPCalls.update("db/sources/201511\ -\ RA2WWW_ok.xls") #=> 12993 (number of loaded calls)
+ShackKit::Data::SPCalls.update("db/sources/individuals_2016-04-01.csv", "db/sources/clubs_2016-04-01.csv") #=> 13321 (number of loaded calls)
 ```
 
 ## Development
@@ -91,6 +110,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/rrrodrigo/shack_kit.
 
+## Acknowledgments
+
+ShackKit development has been sponsored by my employer [Ragnarson](http://www.ragnarson.com), a Ruby software shop from Poland, which is supporting open software contributions of its employees during quarterly Ragnarson Open Day events.
 
 ## License
 

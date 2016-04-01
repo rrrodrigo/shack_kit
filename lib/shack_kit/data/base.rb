@@ -26,8 +26,8 @@ module ShackKit
 
       def db_load
         SOTACalls.update
-        # SPCalls.update - UKE has changed the data format, so we skip this until SPCalls.update is updated
         SOTASummits.update
+        SPCalls.update
       end
     end
   end
@@ -36,5 +36,5 @@ end
 ShackKit::Data.schema_update
 
 require 'shack_kit/data/sota_calls'
-require 'shack_kit/data/sp_calls'
 require 'shack_kit/data/sota_summits'
+require 'shack_kit/data/sp_calls'

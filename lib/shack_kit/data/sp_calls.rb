@@ -1,10 +1,11 @@
 module ShackKit
   module Data
     class SPCalls
-      def self.update(*source_files)
+      def self.update(source_file = SOURCES_DIR + "/individuals_2016-04-01.csv", *other_source_files)
+        sources = [source_file] + other_source_files
         calls = DB[:sp_calls]
         calls.delete
-        source_files.each do |source_file|
+        sources.each do |source_file|
           CSV.foreach(source_file, col_sep: ";", encoding: "Windows-1250:UTF-8", headers: true) do |row|
             individual = row["operator_1"].nil?
             calls.insert(

@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'sqlite3'
 require 'sequel'
+require 'simple-spreadsheet'
 
 module ShackKit
   module Data
@@ -31,5 +32,8 @@ module ShackKit
   end
 end
 
+ShackKit::Data.schema_update
+
 require 'shack_kit/data/sota_calls'
 require 'shack_kit/data/sp_calls'
+require 'shack_kit/data/sota_summits'

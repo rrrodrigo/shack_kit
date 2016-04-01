@@ -5,8 +5,8 @@ module ShackKit
         sources = [source_file] + other_source_files
         calls = DB[:sp_calls]
         calls.delete
-        sources.each do |source_file|
-          CSV.foreach(source_file, col_sep: ";", encoding: "Windows-1250:UTF-8", headers: true) do |row|
+        sources.each do |source|
+          CSV.foreach(source, col_sep: ";", encoding: "Windows-1250:UTF-8", headers: true) do |row|
             individual = row["operator_1"].nil?
             calls.insert(
               callsign: row["call_sign"],

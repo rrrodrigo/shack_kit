@@ -1,5 +1,8 @@
 # ShackKit
 
+[![Gem Version](https://badge.fury.io/rb/shack_kit.svg)](https://badge.fury.io/rb/shack_kit)
+[![Code Climate](https://codeclimate.com/github/rrrodrigo/shack_kit/badges/gpa.svg)](https://codeclimate.com/github/rrrodrigo/shack_kit)
+
 Collection of HAM radio utilities packaged as Ruby gem, by SQ9OZM
 
 ## Functionality

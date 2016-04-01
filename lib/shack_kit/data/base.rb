@@ -26,7 +26,8 @@ module ShackKit
 
       def db_load
         SOTACalls.update
-        SPCalls.update
+        # SPCalls.update - UKE has changed the data format, so we skip this until SPCalls.update is updated
+        SOTASummits.update
       end
     end
   end

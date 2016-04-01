@@ -30,7 +30,10 @@ module ShackKit
       end
 
       def self.check(reference)
-        DB[:sota_summits].where(summit_code: reference).first
+        summit = DB[:sota_summits].where(summit_code: reference).first
+        return false if summit.nil?
+        locator = Maidenhead.to_maidenhead(summit[:latitude], summit[:longitude], 3)
+        summit.merge(maidenhead_locator: locator)
       end
     end
   end

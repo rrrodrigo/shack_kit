@@ -2,6 +2,7 @@ require 'fileutils'
 require 'sqlite3'
 require 'sequel'
 require 'maidenhead'
+require 'csv'
 
 module ShackKit
   module Data

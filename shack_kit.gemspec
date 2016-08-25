@@ -36,4 +36,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'sqlite3', '~> 1.3', '>= 1.3.3'
   spec.add_runtime_dependency 'sequel', '~> 4', '>= 4.28'
   spec.add_runtime_dependency 'maidenhead', '~> 1.0', '>= 1.0.1'
+  spec.add_runtime_dependency 'oga', '~> 2.3', '>= 2.3'
+  spec.add_runtime_dependency 'http', '~> 2.0', '>= 2.0.3'
 end

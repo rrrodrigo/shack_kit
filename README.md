@@ -3,13 +3,21 @@
 [![Gem Version](https://badge.fury.io/rb/shack_kit.svg)](https://badge.fury.io/rb/shack_kit)
 [![Code Climate](https://codeclimate.com/github/rrrodrigo/shack_kit/badges/gpa.svg)](https://codeclimate.com/github/rrrodrigo/shack_kit)
 
-Collection of HAM radio utilities packaged as Ruby gem, by SQ9OZM
+Collection of HAM radio utilities packaged as Ruby gem, by Marcin Bajer, SQ9OZM
 
 ## Functionality
+
 ### Data lookup
- * SOTA callsigns checker, using ON6ZQ database of SOTA activators and chasers (http://www.on6zq.be/w/index.php/SOTA/MasterDta)
- * SOTA summits checker, using the database of SOTA summits published at http://sotadata.org.uk/summits.aspx by Summits on the Air
- * SP operators callsigns checker, using data published by Republic of Poland Office of Electronic Communication (https://amator.uke.gov.pl/?locale=en)
+
+#### Offline
+ * SOTA callsigns checker, using [ON6ZQ database of SOTA activators and chasers](http://www.on6zq.be/w/index.php/SOTA/MasterDta).
+ * SOTA summits checker, using [the database of SOTA summits](http://sotadata.org.uk/summits.aspx) published by Summits on the Air.
+ * SP callsigns checker, using licensing data published by [Republic of Poland Office of Electronic Communication](https://amator.uke.gov.pl/?locale=en).
+
+#### Online
+ * [QRZ.com](https://www.qrz.com) callsign lookup, using [the XML API](http://www.qrz.com/page/xml_data.html) of the most popular callbook ("phone book" for radio amateurs) worldwide. Note that paid subscription is needed to access complete datasets.
+ * [HamQTH.com](https://www.hamqth.com) callsign lookup, using [the XML API](https://www.hamqth.com/developers.php) of a less popular, but free callbook service.
+ * [QRZ.pl](http://qrz.pl) callsign lookup, using the most popular callbook service in Poland - and hence limited to SP callsigns.
 
 ## Installation
 
@@ -41,7 +49,7 @@ Now you are all set to use ShackKit in your code or from Ruby console!
 
 ## Usage
 
-#### How to use the data lookup functionality?
+#### Offline data lookup
 
 ```ruby
 require 'shack_kit'
@@ -78,13 +86,92 @@ ShackKit::Data::SOTASummits.check('SP/BZ-059')
 
 ```
 
-#### How to refresh the data in ShackKit database?
+#### Online data lookup
+
+Online means here that you need Internet access to perform a lookup and that the services you are querying are available when you do it.
+
+```ruby
+require 'shack_kit'
+
+# To be able to query QRZ.com from your Ruby code you need to have created an account there.
+# First, create a query object like this, substituting your own callsign and password:
+qrz = ShackKit::Data::QRZ.new(login: "SQ9OZM", password: "t0ps3cr37")
+=> #<ShackKit::Data::QRZ:0x007fc1424be8e8 @session_key="72e0ab57811969fd98f64692875d2c98">
+
+# After that, you can make multiple queries until the session key expires (after one hour)
+qrz.lookup("SQ9OZM")
+=> {:call=>"SQ9OZM", :fname=>"Marcin", :name=>"Bajer", :addr2=>"Dobczyce", :country=>"Poland", :message=>"A subscription is required to access the complete record."}
+
+qrz.lookup("EA0JC")
+=> {:call=>"EA0JC", :fname=>"ex King of Spain", :name=>"- QSL ONLY via EA4URE", :addr2=>"P.O. Box: 55.055 - Madrid", :country=>"Spain", :message=>"A subscription is required to access the complete record."}
+
+qrz.lookup("SP9KDR")
+=> {:call=>"SP9KDR", :fname=>"Klub Krótkofalowców", :name=>"Dolina Raby", :addr2=>"Pcim", :country=>"Poland", :message=>"A subscription is required to access the complete record."}
+
+qrz.lookup("N0CALL")
+=> {:error=>"Not found: N0CALL"}
+
+# To be able to query HamQTH from your Ruby code you need to have created an account there.
+# First, create a query object like this, substituting your own callsign and password:
+hamqth = ShackKit::Data::HamQTH.new(login: "SQ9OZM", password: "an07h3rs3cr37")
+=> #<ShackKit::Data::HamQTH:0x007fc1427378b8 @session_key="984ebf6d925ee0bb12daaad00367d2c79d3c0e1e">
+
+# After that, you can make multiple queries until the session key expires (after one hour)
+hamqth.lookup("SQ9OZM")
+=> {:callsign=>"SQ9OZM", :nick=>"Marcin", :qth=>"Dobczyce", :country=>"Poland", :adif=>"269", :itu=>"28", :cq=>"15", :grid=>"KN09BV", :adr_name=>"Marcin Bajer", :adr_street1=>"Marwin 199", :adr_city=>"Dobczyce", :adr_zip=>"32-410", :adr_country=>"Poland", :adr_adif=>"269", :district=>"M", :lotw=>"Y", :qsldirect=>"Y", :qsl=>"Y", :eqsl=>"Y", :email=>"sq9ozm@tigana.pl", :web=>"http://sq9ozm.tumblr.com", :latitude=>"49.880729", :longitude=>"20.116471", :continent=>"EU", :utc_offset=>"-1"}
+
+hamqth.lookup("EA0JC")
+=> {:callsign=>"ea0jc", :nick=>"King", :qth=>"Madrid", :country=>"Spain", :adif=>"281", :itu=>"37", :cq=>"14", :grid=>"IN80DJ", :adr_name=>"King Juan Carlos De Borb~n", :adr_street1=>"Royal Palace", :adr_city=>"Madrid", :adr_zip=>"", :adr_country=>"Spain", :adr_adif=>"281", :lotw=>"?", :qsldirect=>"?", :qsl=>"?", :eqsl=>"?", :latitude=>"40.416648864746094", :longitude=>"-3.7144553661346436", :continent=>"EU", :utc_offset=>"-1"}
+
+hamqth.lookup("SP9KDR")
+=> {:error=>"Callsign not found"}
+
+hamqth.lookup("N0CALL")
+=> {:error=>"Callsign not found"}
+
+# In case you do not want to enter the QRZ.com/HamQTH.com password in your code,
+# create a shack_kit config file at `~/.shack_kit/config.yml`
+# with the following structure (subsitute your own callsigns and passwords):
+  qrz_com:
+    login: SQ9OZM
+    password: t0ps3cr37
+  ham_qth:
+    login: SQ9OZM
+    password: an07h3rs3cr37
+
+# After that, the query objects can be created simply:
+
+qrz = ShackKit::Data::hamqth.new
+=> #<ShackKit::Data::QRZ:0x007fc1427cf8e8 @session_key="72e0ab57811969fd98f64692875d2c98">
+
+hamqth = ShackKit::Data::HamQTH.new
+=> #<ShackKit::Data::HamQTH:0x007fc142774380 @session_key="f0d0f750193b936927fdd841f459f4fb8de1a2a3">
+
+# To get callsign information at qrz.pl from your Ruby code you do not need any account there.
+# Just run the lookup like this:
+
+ShackKit::Data::QRZ_PL.lookup("SP9AMH")
+=> {:callsign=>"SP9AMH", :details=>["Data rejestracji: 2009-03-27 10:42:00", "Licznik odwiedzin strony: sp9amh.qrz.pl wskazuje: 6916"], :grid=>nil}
+
+ShackKit::Data::QRZ_PL.lookup("SP9KDR")
+=> {:callsign=>"SP9KDR", :details=>["Klub Krotkofalowcow Doliny Raby", "Pcim 597", "32-432 Pcim", "POLSKA", "LOKATOR: JN99XS", "QSL MANAGER: PZK OT-12", "QRG: FM: 145.450MHz  DV: 438.150MHz", "SP9KDR na mapie kompaktowej lub pe\xB3noekranowej", "Data rejestracji: 2012-12-06 22:14:58", "Licznik odwiedzin strony: sp9kdr.qrz.pl wskazuje: 1575"], :grid=>"JN99XS"}
+
+ShackKit::Data::QRZ_PL.lookup("SP9KGP")
+=> {:callsign=>"SP9KGP", :details=>["Klub Turystyczno-Radiowo-Astronomiczny 'Ryjek' SP9KGP", "Schronisko PTTK na Luboniu Wielkim", "34 - 701 Rabka Zaryte 165", "Polska", "LOKATOR: JN99XP", "QSL MANAGER: SQ9MCK", "QRG: 145.550 MHz", "SP9KGP na mapie kompaktowej lub pe\xB3noekranowej", "Data rejestracji: 2006-07-29 01:35:41", "Licznik odwiedzin strony: sp9kgp.qrz.pl wskazuje: 21432"], :grid=>"JN99XP"}
+
+ShackKit::Data::QRZ_PL.lookup("EA0JC")
+=> {:error=>"Not found: EA0JC"}
+```
+
+
+#### Refreshing the data in ShackKit database
 
 ##### SOTA callsigns
 Christophe ON6ZQ compiles the reference data every night and publishes them at http://www.on6zq.be/w/index.php/SOTA/MasterDta in a [zip file](http://www.on6zq.be/p/SOTA/SOTAdata/masterSOTA.zip). Upon extracting the zip, check for file named `masterSOTA.scp` and load its content into ShackKit database like this:
 
 ```ruby
-ShackKit::Data::SOTACalls.update('masterSOTA.scp') #=> 6328 (this is the count of loaded callsigns)
+ShackKit::Data::SOTACalls.update('masterSOTA.scp')
+=> 6328 (this is the count of loaded callsigns)
 ```
 
 ##### SOTA summits
@@ -92,7 +179,8 @@ Summits on the Air Management Team maintains the database of SOTA award program 
 updated daily, available for download in CSV format by following a link from the bottom of the [summits page](http://www.sotadata.org.uk/summits.aspx).
 The file can be loaded into ShackKit database like this:
 ```ruby
-ShackKit::Data::SOTASummits.update("db/sources/summitslist.csv") #=> 95618 (this is the count of loaded summits)
+ShackKit::Data::SOTASummits.update("db/sources/summitslist.csv")
+=> 95618 (this is the count of loaded summits)
 ```
 It is a large dataset and will take a while to load.
 
@@ -100,7 +188,8 @@ It is a large dataset and will take a while to load.
 [UKE, the Office of Electronic Communication](https://en.uke.gov.pl) has the authority over issuing amateur radio licenses in Poland. The current lists of valid licenses are published separately for individual and club stations and are downloadable as CSV files from these pages: https://amator.uke.gov.pl/individuals?locale=en (Individuals) and https://amator.uke.gov.pl/clubs?locale=en (Clubs). There is a blue "Download" button on the bottom left of each page. Both datasets can be then loaded into ShackKit database like this:
 
 ```ruby
-ShackKit::Data::SPCalls.update("db/sources/individuals_2016-04-01.csv", "db/sources/clubs_2016-04-01.csv") #=> 13321 (number of loaded calls)
+ShackKit::Data::SPCalls.update("db/sources/individuals_2016-04-01.csv", "db/sources/clubs_2016-04-01.csv")
+=> 13321 (number of loaded calls)
 ```
 
 ## Development

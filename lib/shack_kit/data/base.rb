@@ -44,6 +44,7 @@ ShackKit::Data.schema_update
 
 require 'shack_kit/data/ham_qth'
 require 'shack_kit/data/qrz'
+require 'shack_kit/data/qrz_pl'
 require 'shack_kit/data/sota_calls'
 require 'shack_kit/data/sota_summits'
 require 'shack_kit/data/sp_calls'

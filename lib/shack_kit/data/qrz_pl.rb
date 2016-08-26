@@ -9,12 +9,14 @@ module ShackKit
         return { error: "Not found: #{callsign}"} unless
           document.xpath('//span[contains(@class, "znak")]').text == callsign
         details = document.xpath('//span[contains(@class, "dane")]').map(&:text)
-        if grid_info = details.select{ |d| d =~ /^LOKATOR\: [A-Z]{2}\d{2}/}.first
-          grid = grid_info.split.last
-        else
-          grid = nil
-        end
-        { callsign: callsign, details: details, grid: grid }
+        { callsign: callsign, details: details, grid: grid_lookup(details) }
+      end
+
+      private
+
+      def self.grid_lookup(details)
+        return nil unless grid_info = details.select{ |d| d =~ /^LOKATOR\: [A-Z]{2}\d{2}/}.first
+        grid_info.split.last
       end
     end
   end

@@ -11,9 +11,11 @@ module ShackKit
         response = HTTP.post("#{QUERY_URL}/current/", form: { username: login, password: password, agent: "Ruby-gem-shack_kit-#{ShackKit::VERSION}" })
         parsed_response = Oga.parse_xml(response.to_s)
         @session_key = parsed_response.xpath("QRZDatabase/Session/Key").text
+        puts parsed_response.xpath("QRZDatabase/Session/Error").text if @session_key.empty?
       end
 
       def lookup(callsign)
+        return { message: "Can't query qrz.com without a valid session key" } if @session_key.nil? || @session_key.empty?
         response = HTTP.post("#{QUERY_URL}/current/", form: { s: @session_key, callsign: callsign })
         parsed_response = Oga.parse_xml(response.to_s)
         attributes = parsed_response.xpath("QRZDatabase/Callsign").first.children.select{ |c| c.class == Oga::XML::Element }.map(&:name)

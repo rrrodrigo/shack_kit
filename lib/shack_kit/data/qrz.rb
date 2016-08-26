@@ -18,6 +18,8 @@ module ShackKit
         return { error: "Can't query qrz.com, use valid login credentials to get access" } if @session_key.nil? || @session_key.empty?
         response = HTTP.post("#{QUERY_URL}/current/", form: { s: @session_key, callsign: callsign })
         parsed_response = Oga.parse_xml(response.to_s)
+        return { error: parsed_response.xpath("QRZDatabase/Session/Error").text } if
+          parsed_response.xpath("QRZDatabase/Callsign").text.empty?
         attributes = parsed_response.xpath("QRZDatabase/Callsign").first.children.select{ |c| c.class == Oga::XML::Element }.map(&:name)
         {}.tap do |output|
           attributes.each do |attribute|

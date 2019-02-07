@@ -6,6 +6,7 @@ require 'csv'
 require 'yaml'
 require 'http'
 require 'oga'
+require 'open-uri'
 
 module ShackKit
   module Data

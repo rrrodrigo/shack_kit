@@ -3,7 +3,7 @@
 [![Gem Version](https://badge.fury.io/rb/shack_kit.svg)](https://badge.fury.io/rb/shack_kit)
 [![Code Climate](https://codeclimate.com/github/rrrodrigo/shack_kit/badges/gpa.svg)](https://codeclimate.com/github/rrrodrigo/shack_kit)
 
-Collection of HAM radio utilities packaged as Ruby gem, by Marcin Bajer, SQ9OZM
+Collection of HAM radio utilities packaged as Ruby gem by Marcin SQ9OZM
 
 ## Functionality
 
@@ -189,8 +189,15 @@ It is a large dataset and will take a while to load.
 
 ```ruby
 ShackKit::Data::SPCalls.update("db/sources/individuals_2016-04-01.csv", "db/sources/clubs_2016-04-01.csv")
-=> 13321 (number of loaded calls)
+=> 13321 (number of loaded callsigns)
 ```
+
+Starting with version 0.2.1 it is possible to update SP callsigns dataset automatically from UKE website:
+```ruby
+ShackKit::Data::SPCalls.update_online
+=> 14234 (number of loaded callsigns)
+```
+
 
 ## Development
 
@@ -209,5 +216,3 @@ ShackKit development has been sponsored by my employer [Ragnarson](http://www.ra
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
-

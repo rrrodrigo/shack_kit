@@ -141,7 +141,7 @@ hamqth.lookup("N0CALL")
 
 # After that, the query objects can be created simply:
 
-qrz = ShackKit::Data::hamqth.new
+qrz = ShackKit::Data::QRZ.new
 => #<ShackKit::Data::QRZ:0x007fc1427cf8e8 @session_key="72e0ab57811969fd98f64692875d2c98">
 
 hamqth = ShackKit::Data::HamQTH.new

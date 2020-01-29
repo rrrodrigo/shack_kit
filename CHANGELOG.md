@@ -1,9 +1,14 @@
 ## Changelog
 
+#### 0.2.2 (2020-01-28)
+* Update bundled data sources
+* Upgrade dependencies
+* Update README
+
 #### 0.2.1 (2018-02-07)
 * Adjust SP callsigns methods to new format of data source files (again)
 * Allow online update of SP callsigns data
-* Update bundled data sources 
+* Update bundled data sources
 
 #### 0.2.0 (2016-08-26)
 * Update bundled data sources
